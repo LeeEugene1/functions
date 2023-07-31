@@ -1,11 +1,11 @@
 # func
 작은단위의 기능모음
 
-# 구조
-func
-├───[nodejs]
-├───[react]
-└───.env
+## 구조
+func  
+├───[nodejs]  
+├───[react]  
+└───.env  
 
 ## [nodejs]
 ### count
