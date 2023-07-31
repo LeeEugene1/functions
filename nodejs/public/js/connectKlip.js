@@ -1,20 +1,22 @@
 let intervalId
+
 async function handleKilp(){
-    let key
-    await fetch("https://a2a-api.klipwallet.com/v2/a2a/prepare", {
-        method:'post',
-        headers: { "Content-Type": "application/json" },
-        body:JSON.stringify({
-            bapp: {name:'sheepfarm'},
-            type: 'auth'
+    try {
+        const response = await fetch("https://a2a-api.klipwallet.com/v2/a2a/prepare", {
+            method:'post',
+            headers: { "Content-Type": "application/json" },
+            body:JSON.stringify({
+                bapp: {name:'bappName'},
+                type: 'auth'
+            })
         })
-    })
-    .then(res => res.json())
-    .then(res => {
-        key = res.request_key;
+
+        const {request_key} = await response.json()
         resetKlip()
-        makeQR(key)
-    })
+        makeQR(request_key)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 function makeQR(key){
@@ -37,16 +39,20 @@ function resetKlip(){
 }
 
 async function poll(key){
-    let address = ''
-    let data = await fetch(`https://a2a-api.klipwallet.com/v2/a2a/result?request_key=${key}`, {
-        method:"GET",
-        headers: { "Content-Type": "application/json" },
-    }).then(res => res.json())
+    try {
+        const response = await fetch(`https://a2a-api.klipwallet.com/v2/a2a/result?request_key=${key}`, {
+            method:"GET",
+            headers: { "Content-Type": "application/json" },
+        })
 
-    if(data.status === 'completed'){
-        resetKlip()
-        address = data.result.klaytn_address
-        document.getElementById('address').innerText = address
+        const data = await response.json()
+        if(data.status === 'completed'){
+            resetKlip()
+            address = data.result.klaytn_address
+            document.getElementById('address').innerText = address
+        }
+    } catch (error) {
+        console.error(error)
     }
  }
 
