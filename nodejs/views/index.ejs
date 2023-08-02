@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3Modal</title>
+</head>
+<body>
+    Hello2
+    <w3m-core-button></w3m-core-button>
+    <!-- <script type="module">
+        import {
+          EthereumClient,
+          w3mConnectors,
+          w3mProvider,
+          WagmiCore,
+          WagmiCoreChains,
+          WagmiCoreConnectors
+        } from 'https://unpkg.com/@web3modal/ethereum'
+      
+        import { Web3Modal } from 'https://unpkg.com/@web3modal/html'
+      
+        // Equivalent to importing from @wagmi/core
+        const { configureChains, createConfig } = WagmiCore
+      
+        // Equivalent to importing from @wagmi/core/chains
+        const { mainnet, polygon, avalanche, arbitrum } = WagmiCoreChains
+      
+        // Equivalent to importing from @wagmi/core/providers
+        const { CoinbaseWalletConnector } = WagmiCoreConnectors
+      </script> -->
+    <script type="module">
+        import {
+        EthereumClient,
+        w3mConnectors,
+        w3mProvider,
+        WagmiCore,
+        WagmiCoreChains,
+        WagmiCoreConnectors,
+        } from "https://unpkg.com/@web3modal/ethereum@2.4.7";
+
+        import { Web3Modal } from "https://unpkg.com/@web3modal/html@2.4.7";
+        
+
+        // 0. Import wagmi dependencies
+        const { mainnet, polygon, avalanche, arbitrum } = WagmiCoreChains;
+        const { configureChains, createConfig } = WagmiCore;
+
+        // 1. Define chains
+        const chains = [mainnet, polygon, avalanche, arbitrum];
+        const projectId = "2aca272d18deb10ff748260da5f78bfd";
+
+        // 2. Configure wagmi client
+        const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
+        const wagmiConfig = createConfig({
+        autoConnect: true,
+        connectors: [
+            ...w3mConnectors({ chains, version: 2, projectId }),
+            new WagmiCoreConnectors.CoinbaseWalletConnector({
+            chains,
+            options: {
+                appName: "html wagmi example",
+            },
+            }),
+        ],
+        publicClient,
+        });
+
+        // 3. Create ethereum and modal clients
+        const ethereumClient = new EthereumClient(wagmiConfig, chains);
+        export const web3Modal = new Web3Modal(
+        {
+            projectId,
+            walletImages: {
+            safe: "https://pbs.twimg.com/profile_images/1566773491764023297/IvmCdGnM_400x400.jpg",
+            },
+        },
+        ethereumClient
+        );
+    </script>
+</body>
+</html>
