@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server sent events</title>
+</head>
+<body>
+    <h1>Server sent events</h1>
+    <div id="logs"></div>
+    <button>멈춤</button>
+    <script>
+        const eventSource = new EventSource("/sse/events")
+        eventSource.onmessage = (e) =>{
+            let p = document.createElement('p')
+            p.innerText = e.data
+
+            document.getElementById('logs').appendChild(p)
+        }
+
+        document.querySelector('button').addEventListener('click',()=>{
+            eventSource.close()
+        })
+    </script>
+</body>
+</html>
